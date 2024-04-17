@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TaskPersistencePort {
 
-    List<Task> getAllTasks();
+    List<Task> getAllTasks(String order);
     Task create(Task request);
     boolean doesTaskAlreadyExists(Long taskCode, LocalDateTime startDate);
     void deleteById(Long taskCode);

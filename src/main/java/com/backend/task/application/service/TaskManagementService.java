@@ -30,8 +30,11 @@ public class TaskManagementService implements TaskService {
 
 
     @Override
-    public List<TaskDto> getAllTasks() {
-        List<Task> tasks = taskPersistencePort.getAllTasks();
+    public List<TaskDto> getAllTasks(String order) {
+        if (!"asc".equalsIgnoreCase(order) && !"desc".equalsIgnoreCase(order)) {
+            throw new IllegalArgumentException("El parámetro 'order' debe ser 'asc' o 'desc'");
+        }
+        List<Task> tasks = taskPersistencePort.getAllTasks(order);
         return tasks
                 .stream()
                 .map(taskDtoMapper::toDto)

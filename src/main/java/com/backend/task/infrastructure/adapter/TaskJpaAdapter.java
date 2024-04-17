@@ -27,11 +27,19 @@ public class TaskJpaAdapter implements TaskPersistencePort {
     }
 
     @Override
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll()
-                .stream()
-                .map(taskDBMapper::toDomain)
-                .toList();
+    public List<Task> getAllTasks(String order) {
+        if ("desc".equalsIgnoreCase(order)){
+            return taskRepository.findAllOrderByAddedDateDesc()
+                    .stream()
+                    .map(taskDBMapper::toDomain)
+                    .toList();
+        }
+        else {
+            return taskRepository.findAllOrderByAddedDateAsc()
+                    .stream()
+                    .map(taskDBMapper::toDomain)
+                    .toList();
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
+
 @RestController
 @RequestMapping(value = "/tasks")
 public class TasksController {
@@ -22,16 +23,16 @@ public class TasksController {
     }
 
 
-    @GetMapping()
-    public ResponseEntity<Response> allTasks(){
-        return ResponseEntity.status(HttpStatus.OK).body(new Response("Consulta exitosa.", HttpStatus.OK.value(), taskService.getAllTasks()));
+    @GetMapping
+    public ResponseEntity<Response> allTasks(@RequestParam(required = false, defaultValue = "asc") String order){
+        return ResponseEntity.status(HttpStatus.OK).body(new Response("Consulta exitosa.", HttpStatus.OK.value(), taskService.getAllTasks(order)));
     }
 
 
-    //TODO: Retornar response para agregar mensaje exitoso o fallido
     @PostMapping()
-    public ResponseEntity<TaskDto> createNewTask(@Validated @RequestBody TaskRequest taskRequest){
-        return ResponseEntity.status(HttpStatus.OK).body(taskService.createNew(taskRequest));
+    public ResponseEntity<Response> createNewTask(@Validated @RequestBody TaskRequest taskRequest){
+        TaskDto taskCreated = taskService.createNew(taskRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(new Response("Tarea creada exitosamente con código: " + taskCreated.getTaskCode(), HttpStatus.OK.value()));
     }
 
     @DeleteMapping("/{taskCode}")
