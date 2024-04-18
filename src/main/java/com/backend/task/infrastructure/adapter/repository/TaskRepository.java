@@ -1,5 +1,7 @@
 package com.backend.task.infrastructure.adapter.repository;
 
+import com.backend.task.domain.model.enums.EnumPriority;
+import com.backend.task.domain.model.enums.EnumStatus;
 import com.backend.task.infrastructure.adapter.entity.TaskEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,6 +21,16 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     @Query("SELECT o FROM TaskEntity o ORDER BY o.addedDate DESC")
     List<TaskEntity> findAllOrderByAddedDateDesc();
+
+    List<TaskEntity> findByStatus(EnumStatus status);
+
+    List<TaskEntity> findByStartDate(LocalDateTime startDate);
+
+    List<TaskEntity> findByAssignedPerson(String assignedPerson);
+
+    List<TaskEntity> findByPriority(EnumPriority priority);
+
+
 
 
 }

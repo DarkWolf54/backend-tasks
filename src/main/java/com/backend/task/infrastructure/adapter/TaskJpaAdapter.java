@@ -1,6 +1,8 @@
 package com.backend.task.infrastructure.adapter;
 
 import com.backend.task.domain.model.Task;
+import com.backend.task.domain.model.enums.EnumPriority;
+import com.backend.task.domain.model.enums.EnumStatus;
 import com.backend.task.domain.port.TaskPersistencePort;
 import com.backend.task.infrastructure.adapter.entity.TaskEntity;
 import com.backend.task.infrastructure.adapter.exception.TaskException;
@@ -61,6 +63,47 @@ public class TaskJpaAdapter implements TaskPersistencePort {
             throw new TaskException(HttpStatus.NOT_FOUND, "No existe una tarea con el id buscado: " + taskCode);
         }
         return taskDBMapper.toDomain(taskEntityFound.get());
+    }
+
+    @Override
+    public List<Task> getTasksByStatus(EnumStatus status) {
+        return taskRepository.findByStatus(status)
+                .stream()
+                .map(taskDBMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Task> getTasksByStartDate(LocalDateTime startDate) {
+        return taskRepository.findByStartDate(startDate)
+                .stream()
+                .map(taskDBMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Task> getTasksByAssignedPerson(String assignedPerson) {
+        return taskRepository.findByAssignedPerson(assignedPerson)
+                .stream()
+                .map(taskDBMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Task> getTasksByPriority(EnumPriority priority) {
+        return taskRepository.findByPriority(priority)
+                .stream()
+                .map(taskDBMapper::toDomain)
+                .toList();
+    }
+
+    //TODO: Reviar el edit para las validacione y addedDate, mirar si al final es necesario un request solo para edit
+    @Override
+    public Task edit(Long taskCode, Task request) {
+        TaskEntity taskEntityToEdit = taskDBMapper.toDb(request);
+        TaskEntity taskEntityEdited = taskRepository.save(taskEntityToEdit);
+
+        return taskDBMapper.toDomain(taskEntityEdited);
     }
 
     @Override

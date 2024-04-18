@@ -14,7 +14,7 @@ import static com.backend.task.domain.utils.DateUtils.differenceInDays;
 public class Task {
 
     private Long taskCode;
-    private LocalDateTime addedDate = LocalDateTime.now();
+    private LocalDateTime addedDate;
     private String description;
     private String assignedPerson;
     private EnumStatus status;
@@ -131,6 +131,12 @@ public class Task {
     public void validateHighPriorityTaskEdition(){
         if (this.priority == EnumPriority.HIGH && this.status == EnumStatus.IN_PROCESS){
             throw new TaskException(HttpStatus.BAD_REQUEST, "No se puede editar la tarea debido a que su prioridad es alta y su estado es En Proceso");
+        }
+    }
+
+    public void validateDoneTask(){
+        if (this.status == EnumStatus.DONE){
+            throw new TaskException(HttpStatus.BAD_REQUEST, "No se puede editar la tarea debido a que su estado es Finalizada");
         }
     }
 

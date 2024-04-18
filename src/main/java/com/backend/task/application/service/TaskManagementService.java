@@ -6,11 +6,14 @@ import com.backend.task.application.usecases.TaskService;
 import com.backend.task.domain.model.Task;
 import com.backend.task.domain.model.dto.TaskDto;
 import com.backend.task.domain.model.dto.request.TaskRequest;
+import com.backend.task.domain.model.enums.EnumPriority;
+import com.backend.task.domain.model.enums.EnumStatus;
 import com.backend.task.domain.port.TaskPersistencePort;
 import com.backend.task.infrastructure.adapter.exception.TaskException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -47,6 +50,7 @@ public class TaskManagementService implements TaskService {
         if (taskPersistencePort.doesTaskAlreadyExists(request.getTaskCode(), request.getStartDate())){
             throw new TaskException(HttpStatus.BAD_REQUEST, "Ya existe una tarea con ese código y fecha de inicio");
         }
+        taskToCreate.setAddedDate(LocalDateTime.now());
         taskToCreate.validateStartDate();
         taskToCreate.validateCommentariesLength();
         taskToCreate.validateHighPriorityTaskCreation();
@@ -61,5 +65,58 @@ public class TaskManagementService implements TaskService {
         taskToDelete.validateEndDate();
         taskToDelete.validateHighPriorityTaskDeletion();
         taskPersistencePort.deleteById(taskCode);
+    }
+
+    @Override
+    public TaskDto editTask(Long taskCode, TaskRequest request) {
+        Task taskToEdit = taskRequestMapper.toDomain(request);
+        taskToEdit.validateDoneTask();
+        taskToEdit.validateHighPriorityTaskEdition();
+
+        taskToEdit.setAssignedPerson(request.getAssignedPerson());
+        taskToEdit.setStatus(request.getStatus());
+        taskToEdit.setEndDate(request.getEndDate());
+        taskToEdit.setCommentaries(request.getCommentaries());
+
+        Task taskEdited = taskPersistencePort.edit(taskCode, taskToEdit);
+
+        return taskDtoMapper.toDto(taskEdited);
+
+    }
+
+    @Override
+    public List<TaskDto> findByStatus(EnumStatus status) {
+        List<Task> tasks = taskPersistencePort.getTasksByStatus(status);
+        return tasks
+                .stream()
+                .map(taskDtoMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<TaskDto> findByStartDate(LocalDateTime startDate) {
+        List<Task> tasks = taskPersistencePort.getTasksByStartDate(startDate);
+        return tasks
+                .stream()
+                .map(taskDtoMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<TaskDto> findByAssignedPerson(String assignedPerson) {
+        List<Task> tasks = taskPersistencePort.getTasksByAssignedPerson(assignedPerson);
+        return tasks
+                .stream()
+                .map(taskDtoMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<TaskDto> findByPriority(EnumPriority priority) {
+        List<Task> tasks = taskPersistencePort.getTasksByPriority(priority);
+        return tasks
+                .stream()
+                .map(taskDtoMapper::toDto)
+                .toList();
     }
 }
