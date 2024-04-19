@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @RestController
@@ -38,7 +38,7 @@ public class TasksController {
     }
 
     @GetMapping("/startDate/{startDate}")
-    public ResponseEntity<Response> tasksByStatus(@PathVariable LocalDateTime startDate){
+    public ResponseEntity<Response> tasksByStatus(@PathVariable LocalDate startDate){
         return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByStartDate(startDate)));
     }
 

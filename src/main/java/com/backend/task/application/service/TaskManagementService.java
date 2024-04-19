@@ -13,8 +13,10 @@ import com.backend.task.infrastructure.adapter.exception.TaskException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
+
+import static com.backend.task.domain.utils.DateUtils.differenceInDays;
 
 @Service
 public class TaskManagementService implements TaskService {
@@ -50,7 +52,7 @@ public class TaskManagementService implements TaskService {
         if (taskPersistencePort.doesTaskAlreadyExists(request.getTaskCode(), request.getStartDate())){
             throw new TaskException(HttpStatus.BAD_REQUEST, "Ya existe una tarea con ese código y fecha de inicio");
         }
-        taskToCreate.setAddedDate(LocalDateTime.now());
+        taskToCreate.setAddedDate(LocalDate.now());
         taskToCreate.validateStartDate();
         taskToCreate.validateCommentariesLength();
         taskToCreate.validateHighPriorityTaskCreation();
@@ -69,16 +71,33 @@ public class TaskManagementService implements TaskService {
 
     @Override
     public TaskDto editTask(Long taskCode, TaskRequest request) {
-        Task taskToEdit = taskRequestMapper.toDomain(request);
+        Task taskToEdit = taskPersistencePort.getTaskById(taskCode);
+        //Task taskToEdit = taskRequestMapper.toDomain(request);
         taskToEdit.validateDoneTask();
         taskToEdit.validateHighPriorityTaskEdition();
+
+        if (differenceInDays(taskToEdit.getStartDate(), request.getEndDate()) < 0){
+            throw new TaskException(HttpStatus.BAD_REQUEST, "La fecha de fin no puede ser anterior a la fecha de inicio");
+        }
+
+        if (differenceInDays(LocalDate.now(), request.getEndDate()) < 0 && request.getStatus() != EnumStatus.CANCELLED){
+            throw new TaskException(HttpStatus.BAD_REQUEST, "Para este caso solo es posible cambiar el estado a Cancelada");
+        }
+
+        if ((request.getAssignedPerson() != null && !request.getAssignedPerson().isEmpty()) && taskToEdit.getStatus() != EnumStatus.NEW){
+            throw new TaskException(HttpStatus.BAD_REQUEST, "Solo las tareas con status Nueva pueden ser asigandas a otra persona");
+        }
+
+        if (request.getAssignedPerson() != null && !request.getAssignedPerson().isEmpty()){
+            taskToEdit.setAssignedPerson(request.getAssignedPerson());
+        }
 
         taskToEdit.setAssignedPerson(request.getAssignedPerson());
         taskToEdit.setStatus(request.getStatus());
         taskToEdit.setEndDate(request.getEndDate());
         taskToEdit.setCommentaries(request.getCommentaries());
 
-        Task taskEdited = taskPersistencePort.edit(taskCode, taskToEdit);
+        Task taskEdited = taskPersistencePort.edit(taskToEdit);
 
         return taskDtoMapper.toDto(taskEdited);
 
@@ -94,7 +113,7 @@ public class TaskManagementService implements TaskService {
     }
 
     @Override
-    public List<TaskDto> findByStartDate(LocalDateTime startDate) {
+    public List<TaskDto> findByStartDate(LocalDate startDate) {
         List<Task> tasks = taskPersistencePort.getTasksByStartDate(startDate);
         return tasks
                 .stream()

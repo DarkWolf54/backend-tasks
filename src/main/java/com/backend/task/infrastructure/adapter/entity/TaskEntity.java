@@ -6,6 +6,7 @@ import com.backend.task.validation.UniqueTask;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,19 +15,19 @@ public class TaskEntity {
 
     @Id
     private Long taskCode;
-    private LocalDateTime addedDate;
+    private LocalDate addedDate;
     private String description;
     private String assignedPerson;
     private EnumStatus status;
     private EnumPriority priority;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String commentaries;
 
     public TaskEntity() {
     }
 
-    public TaskEntity(Long taskCode, LocalDateTime addedDate, String description, String assignedPerson, EnumStatus status, EnumPriority priority, LocalDateTime startDate, LocalDateTime endDate, String commentaries) {
+    public TaskEntity(Long taskCode, LocalDate addedDate, String description, String assignedPerson, EnumStatus status, EnumPriority priority, LocalDate startDate, LocalDate endDate, String commentaries) {
         this.taskCode = taskCode;
         this.addedDate = addedDate;
         this.description = description;
@@ -46,11 +47,11 @@ public class TaskEntity {
         this.taskCode = taskCode;
     }
 
-    public LocalDateTime getAddedDate() {
+    public LocalDate getAddedDate() {
         return addedDate;
     }
 
-    public void setAddedDate(LocalDateTime addedDate) {
+    public void setAddedDate(LocalDate addedDate) {
         this.addedDate = addedDate;
     }
 
@@ -86,19 +87,19 @@ public class TaskEntity {
         this.priority = priority;
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -111,6 +112,6 @@ public class TaskEntity {
     }
 
     public void setInitialValues(){
-        this.addedDate = LocalDateTime.now();
+        this.addedDate = LocalDate.now();
     }
 }

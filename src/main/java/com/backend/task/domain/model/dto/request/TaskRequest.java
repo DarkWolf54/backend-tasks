@@ -6,6 +6,7 @@ import com.backend.task.domain.model.enums.EnumStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TaskRequest {
@@ -25,18 +26,16 @@ public class TaskRequest {
     @NotNull(message = "Este campo debe tener algún valor.")
     private EnumPriority priority;
 
-    @NotNull(message = "Este campo debe tener algún valor.")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
-    @NotNull(message = "Este campo debe tener algún valor.")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     private String commentaries;
 
     public TaskRequest() {
     }
 
-    public TaskRequest(Long taskCode, String description, String assignedPerson, EnumStatus status, EnumPriority priority, LocalDateTime startDate, LocalDateTime endDate, String commentaries) {
+    public TaskRequest(Long taskCode, String description, String assignedPerson, EnumStatus status, EnumPriority priority, LocalDate startDate, LocalDate endDate, String commentaries) {
         this.taskCode = taskCode;
         this.description = description;
         this.assignedPerson = assignedPerson;
@@ -87,19 +86,19 @@ public class TaskRequest {
         this.priority = priority;
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 

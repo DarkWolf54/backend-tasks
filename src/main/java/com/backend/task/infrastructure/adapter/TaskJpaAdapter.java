@@ -12,7 +12,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,7 +74,7 @@ public class TaskJpaAdapter implements TaskPersistencePort {
     }
 
     @Override
-    public List<Task> getTasksByStartDate(LocalDateTime startDate) {
+    public List<Task> getTasksByStartDate(LocalDate startDate) {
         return taskRepository.findByStartDate(startDate)
                 .stream()
                 .map(taskDBMapper::toDomain)
@@ -97,9 +97,9 @@ public class TaskJpaAdapter implements TaskPersistencePort {
                 .toList();
     }
 
-    //TODO: Reviar el edit para las validacione y addedDate, mirar si al final es necesario un request solo para edit
+    //TODO: Reviar el edit para las validacione y addedDate, mirar si al final es necesario un request solo para edit, buscar la tarea, modificarla y ya enviarla para save, mirar si se puede cambiar LDT por LD
     @Override
-    public Task edit(Long taskCode, Task request) {
+    public Task edit(Task request) {
         TaskEntity taskEntityToEdit = taskDBMapper.toDb(request);
         TaskEntity taskEntityEdited = taskRepository.save(taskEntityToEdit);
 
@@ -107,7 +107,7 @@ public class TaskJpaAdapter implements TaskPersistencePort {
     }
 
     @Override
-    public boolean doesTaskAlreadyExists(Long taskCode, LocalDateTime startDate) {
+    public boolean doesTaskAlreadyExists(Long taskCode, LocalDate startDate) {
         Optional<TaskEntity> taskEntity = taskRepository.findByTaskCodeAndStartDate(taskCode, startDate);
         return taskEntity.isPresent();
     }

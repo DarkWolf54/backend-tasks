@@ -3,24 +3,25 @@ package com.backend.task.domain.model.dto;
 import com.backend.task.domain.model.enums.EnumPriority;
 import com.backend.task.domain.model.enums.EnumStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TaskDto {
 
     private Long taskCode;
-    private LocalDateTime addedDate;
+    private LocalDate addedDate;
     private String description;
     private String assignedPerson;
     private EnumStatus status;
     private EnumPriority priority;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String commentaries;
 
     public TaskDto() {
     }
 
-    public TaskDto(Long taskCode, String description, String assignedPerson, EnumStatus status, EnumPriority priority, LocalDateTime startDate, LocalDateTime endDate, String commentaries, LocalDateTime addedDate) {
+    public TaskDto(Long taskCode, String description, String assignedPerson, EnumStatus status, EnumPriority priority, LocalDate startDate, LocalDate endDate, String commentaries, LocalDate addedDate) {
         this.taskCode = taskCode;
         this.description = description;
         this.assignedPerson = assignedPerson;
@@ -72,19 +73,19 @@ public class TaskDto {
         this.priority = priority;
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -96,11 +97,11 @@ public class TaskDto {
         this.commentaries = commentaries;
     }
 
-    public LocalDateTime getAddedDate() {
+    public LocalDate getAddedDate() {
         return addedDate;
     }
 
-    public void setAddedDate(LocalDateTime addedDate) {
+    public void setAddedDate(LocalDate addedDate) {
         this.addedDate = addedDate;
     }
 }

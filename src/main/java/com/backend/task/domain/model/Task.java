@@ -5,6 +5,7 @@ import com.backend.task.domain.model.enums.EnumStatus;
 import com.backend.task.infrastructure.adapter.exception.TaskException;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static com.backend.task.domain.model.constant.Constants.COMMENTARIES_MAX_LENGTH;
@@ -14,20 +15,20 @@ import static com.backend.task.domain.utils.DateUtils.differenceInDays;
 public class Task {
 
     private Long taskCode;
-    private LocalDateTime addedDate;
+    private LocalDate addedDate;
     private String description;
     private String assignedPerson;
     private EnumStatus status;
     private EnumPriority priority;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String commentaries;
 
 
     public Task() {
     }
 
-    public Task(Long taskCode, LocalDateTime addedDate, String description, String assignedPerson, EnumStatus status, EnumPriority priority, LocalDateTime startDate, LocalDateTime endDate, String commentaries) {
+    public Task(Long taskCode, LocalDate addedDate, String description, String assignedPerson, EnumStatus status, EnumPriority priority, LocalDate startDate, LocalDate endDate, String commentaries) {
         this.taskCode = taskCode;
         this.addedDate = addedDate;
         this.description = description;
@@ -48,11 +49,11 @@ public class Task {
         this.taskCode = taskCode;
     }
 
-    public LocalDateTime getAddedDate() {
+    public LocalDate getAddedDate() {
         return addedDate;
     }
 
-    public void setAddedDate(LocalDateTime addedDate) {
+    public void setAddedDate(LocalDate addedDate) {
         this.addedDate = addedDate;
     }
 
@@ -88,19 +89,19 @@ public class Task {
         this.priority = priority;
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -141,7 +142,7 @@ public class Task {
     }
 
     public void validateStartDate(){
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         if (differenceInDays(now, this.startDate) < 0){
             throw new TaskException(HttpStatus.BAD_REQUEST, "La fecha de inicio de la tarea es anterior a la fecha actual");
         }
@@ -154,7 +155,7 @@ public class Task {
     }
 
     public void validateEndDate(){
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         if (differenceInDays(now, this.endDate) < 0){
             throw new TaskException(HttpStatus.BAD_REQUEST, "No es posible eliminar la tarea debido a que su fecha de finalización ya pasó.");
         }
