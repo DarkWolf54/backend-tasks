@@ -14,10 +14,10 @@ public interface TaskService {
     TaskDto createNew(TaskRequest request);
     void deleteTaskById(Long taskCode);
     TaskDto editTask(Long taskCode, TaskRequest request);
-    List<TaskDto> findByStatus(EnumStatus status);
-    List<TaskDto> findByStartDate(LocalDate startDate);
-    List<TaskDto> findByAssignedPerson(String assignedPerson);
-    List<TaskDto> findByPriority(EnumPriority priority);
+    List<TaskDto> findByStatus(EnumStatus status, String order);
+    List<TaskDto> findByStartDate(LocalDate startDate, String order);
+    List<TaskDto> findByAssignedPerson(String assignedPerson, String order);
+    List<TaskDto> findByPriority(EnumPriority priority, String order);
 
 
 

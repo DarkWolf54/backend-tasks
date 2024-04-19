@@ -72,7 +72,6 @@ public class TaskManagementService implements TaskService {
     @Override
     public TaskDto editTask(Long taskCode, TaskRequest request) {
         Task taskToEdit = taskPersistencePort.getTaskById(taskCode);
-        //Task taskToEdit = taskRequestMapper.toDomain(request);
         taskToEdit.validateDoneTask();
         taskToEdit.validateHighPriorityTaskEdition();
 
@@ -104,8 +103,8 @@ public class TaskManagementService implements TaskService {
     }
 
     @Override
-    public List<TaskDto> findByStatus(EnumStatus status) {
-        List<Task> tasks = taskPersistencePort.getTasksByStatus(status);
+    public List<TaskDto> findByStatus(EnumStatus status, String order) {
+        List<Task> tasks = taskPersistencePort.getTasksByStatus(status, order);
         return tasks
                 .stream()
                 .map(taskDtoMapper::toDto)
@@ -113,8 +112,8 @@ public class TaskManagementService implements TaskService {
     }
 
     @Override
-    public List<TaskDto> findByStartDate(LocalDate startDate) {
-        List<Task> tasks = taskPersistencePort.getTasksByStartDate(startDate);
+    public List<TaskDto> findByStartDate(LocalDate startDate, String order) {
+        List<Task> tasks = taskPersistencePort.getTasksByStartDate(startDate, order);
         return tasks
                 .stream()
                 .map(taskDtoMapper::toDto)
@@ -122,8 +121,8 @@ public class TaskManagementService implements TaskService {
     }
 
     @Override
-    public List<TaskDto> findByAssignedPerson(String assignedPerson) {
-        List<Task> tasks = taskPersistencePort.getTasksByAssignedPerson(assignedPerson);
+    public List<TaskDto> findByAssignedPerson(String assignedPerson, String order) {
+        List<Task> tasks = taskPersistencePort.getTasksByAssignedPerson(assignedPerson, order);
         return tasks
                 .stream()
                 .map(taskDtoMapper::toDto)
@@ -131,8 +130,8 @@ public class TaskManagementService implements TaskService {
     }
 
     @Override
-    public List<TaskDto> findByPriority(EnumPriority priority) {
-        List<Task> tasks = taskPersistencePort.getTasksByPriority(priority);
+    public List<TaskDto> findByPriority(EnumPriority priority, String order) {
+        List<Task> tasks = taskPersistencePort.getTasksByPriority(priority, order);
         return tasks
                 .stream()
                 .map(taskDtoMapper::toDto)

@@ -9,6 +9,7 @@ import com.backend.task.infrastructure.adapter.exception.TaskException;
 import com.backend.task.infrastructure.adapter.mapper.TaskDbMapper;
 import com.backend.task.infrastructure.adapter.repository.TaskRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Transactional
 public class TaskJpaAdapter implements TaskPersistencePort {
 
+    public static final String ADDED_DATE = "addedDate";
     private final TaskRepository taskRepository;
     private final TaskDbMapper taskDBMapper;
 
@@ -28,21 +30,17 @@ public class TaskJpaAdapter implements TaskPersistencePort {
         this.taskDBMapper = taskDBMapper;
     }
 
+
     @Override
     public List<Task> getAllTasks(String order) {
-        if ("desc".equalsIgnoreCase(order)){
-            return taskRepository.findAllOrderByAddedDateDesc()
-                    .stream()
-                    .map(taskDBMapper::toDomain)
-                    .toList();
-        }
-        else {
-            return taskRepository.findAllOrderByAddedDateAsc()
-                    .stream()
-                    .map(taskDBMapper::toDomain)
-                    .toList();
-        }
+        Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, ADDED_DATE);
+        return taskRepository.findAll(sort)
+                .stream()
+                .map(taskDBMapper::toDomain)
+                .toList();
     }
+
 
     @Override
     public Task create(Task request) {
@@ -66,38 +64,45 @@ public class TaskJpaAdapter implements TaskPersistencePort {
     }
 
     @Override
-    public List<Task> getTasksByStatus(EnumStatus status) {
-        return taskRepository.findByStatus(status)
+    public List<Task> getTasksByStatus(EnumStatus status, String order) {
+        Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, ADDED_DATE);
+        return taskRepository.findByStatus(status, sort)
                 .stream()
                 .map(taskDBMapper::toDomain)
                 .toList();
     }
 
     @Override
-    public List<Task> getTasksByStartDate(LocalDate startDate) {
-        return taskRepository.findByStartDate(startDate)
+    public List<Task> getTasksByStartDate(LocalDate startDate, String order) {
+        Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, ADDED_DATE);
+        return taskRepository.findByStartDate(startDate, sort)
                 .stream()
                 .map(taskDBMapper::toDomain)
                 .toList();
     }
 
     @Override
-    public List<Task> getTasksByAssignedPerson(String assignedPerson) {
-        return taskRepository.findByAssignedPerson(assignedPerson)
+    public List<Task> getTasksByAssignedPerson(String assignedPerson, String order) {
+        Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, ADDED_DATE);
+        return taskRepository.findByAssignedPerson(assignedPerson, sort)
                 .stream()
                 .map(taskDBMapper::toDomain)
                 .toList();
     }
 
     @Override
-    public List<Task> getTasksByPriority(EnumPriority priority) {
-        return taskRepository.findByPriority(priority)
+    public List<Task> getTasksByPriority(EnumPriority priority, String order) {
+        Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, ADDED_DATE);
+        return taskRepository.findByPriority(priority, sort)
                 .stream()
                 .map(taskDBMapper::toDomain)
                 .toList();
     }
 
-    //TODO: Reviar el edit para las validacione y addedDate, mirar si al final es necesario un request solo para edit, buscar la tarea, modificarla y ya enviarla para save, mirar si se puede cambiar LDT por LD
     @Override
     public Task edit(Task request) {
         TaskEntity taskEntityToEdit = taskDBMapper.toDb(request);

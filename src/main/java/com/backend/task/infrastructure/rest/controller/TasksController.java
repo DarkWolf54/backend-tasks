@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @RestController
@@ -28,30 +29,31 @@ public class TasksController {
 
 
     @GetMapping
-    public ResponseEntity<Response> allTasks(@RequestParam(required = false, defaultValue = "asc") String order){
-        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.getAllTasks(order)));
+    public ResponseEntity<Response> allTasks(@RequestParam(required = false, defaultValue = "asc") String sortOrder){
+        List<TaskDto> tasks = taskService.getAllTasks(sortOrder);
+        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), tasks));
     }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<Response> tasksByStatus(@PathVariable String status){
-        EnumStatus enumStatus = EnumStatus.fromString(status);
-        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByStatus(enumStatus)));
+    @GetMapping("/status")
+    public ResponseEntity<Response> tasksByStatus(@RequestParam String value, @RequestParam(required = false, defaultValue = "asc") String sortOrder){
+        EnumStatus enumStatus = EnumStatus.fromString(value);
+        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByStatus(enumStatus, sortOrder)));
     }
 
-    @GetMapping("/startDate/{startDate}")
-    public ResponseEntity<Response> taskByStartDate(@PathVariable LocalDate startDate){
-        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByStartDate(startDate)));
+    @GetMapping("/startDate")
+    public ResponseEntity<Response> taskByStartDate(@RequestParam LocalDate value, @RequestParam(required = false, defaultValue = "asc") String sortOrder){
+        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByStartDate(value, sortOrder)));
     }
 
-    @GetMapping("/assignedPerson/{assignedPerson}")
-    public ResponseEntity<Response> taskByAssignedPerson(@PathVariable String assignedPerson){
-        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByAssignedPerson(assignedPerson)));
+    @GetMapping("/assignedPerson")
+    public ResponseEntity<Response> taskByAssignedPerson(@RequestParam String value, @RequestParam(required = false, defaultValue = "asc") String sortOrder){
+        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByAssignedPerson(value, sortOrder)));
     }
 
-    @GetMapping("/priority/{priority}")
-    public ResponseEntity<Response> taskByPriority(@PathVariable String priority){
-        EnumPriority enumPriority = EnumPriority.fromString(priority);
-        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByPriority(enumPriority)));
+    @GetMapping("/priority")
+    public ResponseEntity<Response> taskByPriority(@RequestParam String value, @RequestParam(required = false, defaultValue = "asc") String sortOrder){
+        EnumPriority enumPriority = EnumPriority.fromString(value);
+        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByPriority(enumPriority, sortOrder)));
     }
 
 
@@ -68,8 +70,9 @@ public class TasksController {
     }
 
     @PutMapping("/{taskCode}")
-    public TaskDto edit(@RequestBody TaskRequest taskRequest,
+    public ResponseEntity<Response> edit(@RequestBody TaskRequest taskRequest,
                         @PathVariable Long taskCode){
-        return taskService.editTask(taskCode, taskRequest);
+        TaskDto taskEdited = taskService.editTask(taskCode, taskRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(new Response("Edición exitosa para tarea con código: " + taskEdited.getTaskCode(), HttpStatus.OK.value()));
     }
 }

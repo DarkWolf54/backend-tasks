@@ -14,9 +14,9 @@ public interface TaskPersistencePort {
     boolean doesTaskAlreadyExists(Long taskCode, LocalDate startDate);
     void deleteById(Long taskCode);
     Task getTaskById(Long taskCode);
-    List<Task> getTasksByStatus(EnumStatus status);
-    List<Task> getTasksByStartDate(LocalDate startDate);
-    List<Task> getTasksByAssignedPerson(String assignedPerson);
-    List<Task> getTasksByPriority(EnumPriority priority);
+    List<Task> getTasksByStatus(EnumStatus status, String order);
+    List<Task> getTasksByStartDate(LocalDate startDate, String order);
+    List<Task> getTasksByAssignedPerson(String assignedPerson, String order);
+    List<Task> getTasksByPriority(EnumPriority priority, String order);
     Task edit(Task request);
 }
