@@ -33,23 +33,25 @@ public class TasksController {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<Response> tasksByStatus(@PathVariable EnumStatus status){
-        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByStatus(status)));
+    public ResponseEntity<Response> tasksByStatus(@PathVariable String status){
+        EnumStatus enumStatus = EnumStatus.fromString(status);
+        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByStatus(enumStatus)));
     }
 
     @GetMapping("/startDate/{startDate}")
-    public ResponseEntity<Response> tasksByStatus(@PathVariable LocalDate startDate){
+    public ResponseEntity<Response> taskByStartDate(@PathVariable LocalDate startDate){
         return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByStartDate(startDate)));
     }
 
     @GetMapping("/assignedPerson/{assignedPerson}")
-    public ResponseEntity<Response> tasksByStatus(@PathVariable String assignedPerson){
+    public ResponseEntity<Response> taskByAssignedPerson(@PathVariable String assignedPerson){
         return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByAssignedPerson(assignedPerson)));
     }
 
     @GetMapping("/priority/{priority}")
-    public ResponseEntity<Response> tasksByStatus(@PathVariable EnumPriority priority){
-        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByPriority(priority)));
+    public ResponseEntity<Response> taskByPriority(@PathVariable String priority){
+        EnumPriority enumPriority = EnumPriority.fromString(priority);
+        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), taskService.findByPriority(enumPriority)));
     }
 
 
