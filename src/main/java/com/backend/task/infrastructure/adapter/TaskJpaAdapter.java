@@ -112,6 +112,20 @@ public class TaskJpaAdapter implements TaskPersistencePort {
     }
 
     @Override
+    public List<Task> searchTasks(EnumStatus status, LocalDate startDate, String assignedPerson, EnumPriority priority, String order) {
+        Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, ADDED_DATE);
+        return taskRepository.findByStatusAndStartDateAndAssignedPersonAndPriority(status,
+                        startDate,
+                        assignedPerson,
+                        priority,
+                        sort)
+                .stream()
+                .map(taskDBMapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public boolean doesTaskAlreadyExists(Long taskCode, LocalDate startDate) {
         Optional<TaskEntity> taskEntity = taskRepository.findByTaskCodeAndStartDate(taskCode, startDate);
         return taskEntity.isPresent();

@@ -18,6 +18,7 @@ public interface TaskService {
     List<TaskDto> findByStartDate(LocalDate startDate, String order);
     List<TaskDto> findByAssignedPerson(String assignedPerson, String order);
     List<TaskDto> findByPriority(EnumPriority priority, String order);
+    List<TaskDto> searchTasks(EnumStatus status, LocalDate startDate, String assignedPerson, EnumPriority priority, String order);
 
 
 

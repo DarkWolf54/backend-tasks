@@ -34,6 +34,21 @@ public class TasksController {
         return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), tasks));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<Response> searchTasks(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) String assignedPerson,
+            @RequestParam(required = false) String priority,
+            @RequestParam(required = false, defaultValue = "asc") String sortOrder) {
+
+        EnumStatus enumStatus = EnumStatus.fromString(status);
+        EnumPriority enumPriority = EnumPriority.fromString(priority);
+
+        List<TaskDto> tasks = taskService.searchTasks(enumStatus, startDate, assignedPerson, enumPriority, sortOrder);
+        return ResponseEntity.status(HttpStatus.OK).body(new Response(REQUEST_SUCCESSFUL, HttpStatus.OK.value(), tasks));
+    }
+
     @GetMapping("/status")
     public ResponseEntity<Response> tasksByStatus(@RequestParam String value, @RequestParam(required = false, defaultValue = "asc") String sortOrder){
         EnumStatus enumStatus = EnumStatus.fromString(value);
@@ -75,4 +90,5 @@ public class TasksController {
         TaskDto taskEdited = taskService.editTask(taskCode, taskRequest);
         return ResponseEntity.status(HttpStatus.OK).body(new Response("Edición exitosa para tarea con código: " + taskEdited.getTaskCode(), HttpStatus.OK.value()));
     }
+
 }

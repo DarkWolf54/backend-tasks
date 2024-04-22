@@ -26,6 +26,9 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     List<TaskEntity> findByPriority(EnumPriority priority, Sort sort);
 
+    List<TaskEntity> findByStatusAndStartDateAndAssignedPersonAndPriority(
+            EnumStatus status, LocalDate startDate, String assignedPerson, EnumPriority priority, Sort sort);
+
 
 
 

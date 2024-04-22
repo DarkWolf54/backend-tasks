@@ -137,4 +137,13 @@ public class TaskManagementService implements TaskService {
                 .map(taskDtoMapper::toDto)
                 .toList();
     }
+
+    @Override
+    public List<TaskDto> searchTasks(EnumStatus status, LocalDate startDate, String assignedPerson, EnumPriority priority, String order) {
+        List<Task> tasks = taskPersistencePort.searchTasks(status, startDate, assignedPerson, priority, order);
+        return tasks
+                .stream()
+                .map(taskDtoMapper::toDto)
+                .toList();
+    }
 }

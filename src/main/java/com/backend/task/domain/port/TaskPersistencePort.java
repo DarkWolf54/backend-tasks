@@ -19,4 +19,5 @@ public interface TaskPersistencePort {
     List<Task> getTasksByAssignedPerson(String assignedPerson, String order);
     List<Task> getTasksByPriority(EnumPriority priority, String order);
     Task edit(Task request);
+    List<Task> searchTasks(EnumStatus status, LocalDate startDate, String assignedPerson, EnumPriority priority, String order);
 }
