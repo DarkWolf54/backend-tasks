@@ -164,4 +164,5 @@ public class Task {
             throw new TaskException(HttpStatus.BAD_REQUEST, "No se puede eliminar la tarea debido a que su prioridad es alta y su estado es no es Nueva");
         }
     }
+
 }
