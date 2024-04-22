@@ -7,7 +7,6 @@ import java.util.List;
 
 public class Response {
 
-    //TODO: JWT
     private String message;
     private int statusCode;
     @JsonInclude(JsonInclude.Include.NON_NULL)

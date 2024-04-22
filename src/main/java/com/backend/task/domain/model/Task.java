@@ -6,7 +6,6 @@ import com.backend.task.infrastructure.adapter.exception.TaskException;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static com.backend.task.domain.model.constant.Constants.COMMENTARIES_MAX_LENGTH;
 import static com.backend.task.domain.model.constant.Constants.HIGH_PRIORITY_DAYS_LIMIT;
@@ -119,7 +118,6 @@ public class Task {
         }
     }
 
-    //TODO: Revisar mapeo de prioridades y status con enum, revisar tema de enum y fechas vacías, también addedDate
     public void validateHighPriorityTaskCreation(){
         if (this.priority == EnumPriority.HIGH && differenceInDays(this.startDate, this.endDate) > HIGH_PRIORITY_DAYS_LIMIT){
             throw new TaskException(HttpStatus.BAD_REQUEST, "La diferencia de días entre la fecha de inicio y la fecha de fin es superiro a la permitida para prioridad alta");

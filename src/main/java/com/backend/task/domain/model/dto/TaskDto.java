@@ -4,7 +4,6 @@ import com.backend.task.domain.model.enums.EnumPriority;
 import com.backend.task.domain.model.enums.EnumStatus;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class TaskDto {
 
